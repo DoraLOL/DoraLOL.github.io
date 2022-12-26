@@ -1,0 +1,341 @@
+<?php
+
+
+include_once '../includes/baglan.php';
+session_start();
+if(isset($_SESSION['uid']) && isset($_SESSION['username'])){
+$username=$_SESSION['username'];
+$sql = "SELECT * FROM users WHERE username = ?";
+$stmt = $con->prepare($sql) or die ($con->error);
+$stmt->bind_param('s',$username);
+$stmt->execute();
+$result_username = $stmt->get_result();
+$row = $result_username->fetch_assoc();
+if($row['pre']<7){
+
+header("Location:/404.html");
+
+}}else{
+
+  header("Location:/auth/auth-login");
+}
+
+if(isset($_SESSION['uid']) && isset($_SESSION['username'])){
+    $uid = $_SESSION['uid'];
+	 $username = $_SESSION['username'];
+          	 
+     $sql_account = "SELECT * FROM users WHERE uid = ? ";
+     $stmt = $con->prepare($sql_account) or die ($con->error);
+     $stmt->bind_param('s',$uid);
+     $stmt->execute();
+     $result_account = $stmt->get_result();
+     $row = $result_account->fetch_assoc();
+
+
+     $sql_count_users = "SELECT * FROM users";
+     $query_count_users = $con->prepare($sql_count_users) or die ($con->error);
+     $query_count_users->execute();
+     $result_count_users = $query_count_users->get_result();
+     $total_users = $result_count_users->num_rows;
+	 
+	 $sql_count_users = "SELECT * FROM banned_table";
+     $query_count_users = $con->prepare($sql_count_users) or die ($con->error);
+     $query_count_users->execute();
+     $result_count_users = $query_count_users->get_result();
+     $total_ban = $result_count_users->num_rows;
+     
+}else{
+    ?>
+    <script>
+        window.location.href="../auth/auth-login";
+    </script>
+    <?php
+}
+
+$pre = $row['pre'];
+$bitis = $row['bitis'];
+$id = $row['uid'];
+if($pre == 0)
+{
+    $zaman = "0";
+}
+else{
+    $zaman = $bitis;
+}
+
+if($bitis == date('Y-m-d'))
+{
+$sql = "UPDATE users SET bitis='' WHERE uid =$id";
+$sqll = "UPDATE users SET pre='0' WHERE uid=$id";
+$con->query($sql);
+$con->query($sqll);
+}
+?>
+<!DOCTYPE html>
+<html class="loading dark-layout" lang="en" data-layout="dark-layout" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+
+<head>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="TeamFast">
+        <meta name="keywords" content="Fastchecker, Fast checker, Fast, checker, credit card, credit card checker, ccn, ccn checker, cc checker, tr checker, tr cc checker, usa cc checker, card checker, bin, bin checker, cc duzenleyici, mernis, mernis 2021, kisi sorgu, kisi sorgu 2021, tc kimlik sorgu, tc sorgu, tc sorgu 2021, numara sorgu, numara sorgu 2021, kimlik sorgu, kisi bul 2021"/>
+		<meta name="description" content="FastChecker, Piyasanın en iyi ve en hızlı cc checker sitesidir. Data düzeltici, Account checker, Bin checker vb. birçok hizmeti ücretsiz sağlamaktadır. https://discord.gg/aQpVxkdn"/>
+    <title>FastCheck - Kullanıcı Listesi</title>
+    <link rel="apple-touch-icon" href="../app-assets/images/ico/apple-icon-120.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../app-assets/images/ico/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
+
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/forms/select/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/tables/datatable/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/tables/datatable/responsive.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/tables/datatable/buttons.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/tables/datatable/rowGroup.bootstrap5.min.css">
+    <!-- END: Vendor CSS-->
+
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/bootstrap-extended.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/colors.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/components.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/themes/dark-layout.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/themes/bordered-layout.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/themes/semi-dark-layout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.9/sweetalert2.min.css">
+
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/core/menu/menu-types/vertical-menu.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/plugins/forms/form-validation.css">
+    <!-- END: Page CSS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.9/sweetalert2.all.min.js"></script>
+
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+
+
+    <!-- END: Header-->
+ <?php
+        include_once("includes/header.php");
+        ?>
+
+    <!-- BEGIN: Main Menu-->
+      <?php
+        include_once("includes/menu.php");
+        ?>
+    <!-- END: Main Menu-->
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content ">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper container-xxl p-0">
+            <div class="content-header row">
+            </div>
+            <div class="content-body">
+                <!-- users list start -->
+                <section class="app-user-list">
+                    <div class="row">
+                        <div class="col-lg-3 col-sm-6">
+                            <div class="card">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <h3 class="fw-bolder mb-75"><?= number_format($total_users) ?></h3>
+                                        <span>Toplam Kullanıcı</span>
+                                    </div>
+                                    <div class="avatar bg-light-primary p-50">
+                                        <span class="avatar-content">
+                                            <i data-feather="user" class="font-medium-4"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6">
+                            <div class="card">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <h3 class="fw-bolder mb-75"><?= number_format($total_ban) ?></h3>
+                                        <span>Banlı Kullanıcı</span>
+                                    </div>
+                                    <div class="avatar bg-light-danger p-50">
+                                        <span class="avatar-content">
+                                            <i data-feather="user-plus" class="font-medium-4"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6">
+                            <div class="card">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <h3 class="fw-bolder mb-75">0</h3>
+                                        <span>Aktif Kullanıcı</span>
+                                    </div>
+                                    <div class="avatar bg-light-success p-50">
+                                        <span class="avatar-content">
+                                            <i data-feather="user-check" class="font-medium-4"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6">
+                            <div class="card">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <h3 class="fw-bolder mb-75">0</h3>
+                                        <span>Bekleyen Kullanıcı</span>
+                                    </div>
+                                    <div class="avatar bg-light-warning p-50">
+                                        <span class="avatar-content">
+                                            <i data-feather="user-x" class="font-medium-4"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- list and filter start -->
+                    <div class="card">
+                        <div class="card-body border-bottom">
+                            <h4 class="card-title">Ara ve Filtrele</h4>
+                            <div class="row">
+                                <div class="col-md-4 user_role"></div>
+                                <div class="col-md-4 user_plan"></div>
+                                <div class="col-md-4 user_status"></div>
+                            </div>
+                        </div>
+                        <div class="card-datatable table-responsive pt-0">
+                          <div class="container">
+                              <table class="user-list-table table" id="userListTable">
+                                  <thead class="table-light">
+                                      <tr>
+                                          <th>ID</th>
+                                          <th>KULLANICI ADI</th>
+                                          <th>IP ADRESI</th>
+                                          <th>RANK</th>
+                                          <th>BAKIYE</th>
+                                          <th>STATUS</th>
+                                          <th>DUZENLE</th>
+                                      </tr>
+                                  </thead>
+                              </table>
+                              
+                          </div>
+                            
+                        </div>
+                    </div>
+                    <!-- list and filter end -->
+                </section>
+                <!-- users list ends -->
+
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+    <!-- BEGIN: Footer-->
+    <footer class="footer footer-static footer-light">
+        <p class="clearfix mb-0"><span class="float-md-start d-block d-md-inline-block mt-25">COPYRIGHT &copy; 2021<a class="ms-25" href="https://1.envato.market/pixinvent_portfolio" target="_blank">Pixinvent</a><span class="d-none d-sm-inline-block">, All rights Reserved</span></span><span class="float-md-end d-none d-md-block">Hand-crafted & Made with<i data-feather="heart"></i></span></p>
+    </footer>
+    <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
+    <!-- END: Footer-->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- BEGIN: Vendor JS-->
+    <script src="../app-assets/vendors/js/vendors.min.js"></script>
+    <!-- BEGIN Vendor JS-->
+
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="../app-assets/vendors/js/forms/select/select2.full.min.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/dataTables.bootstrap5.min.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/responsive.bootstrap5.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/datatables.buttons.min.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/jszip.min.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/pdfmake.min.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/vfs_fonts.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/buttons.html5.min.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/buttons.print.min.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js"></script>
+    <script src="../app-assets/vendors/js/forms/validation/jquery.validate.min.js"></script>
+    <script src="../app-assets/vendors/js/forms/cleave/cleave.min.js"></script>
+    <script src="../app-assets/vendors/js/forms/cleave/addons/cleave-phone.us.js"></script>
+    <!-- END: Page Vendor JS-->
+
+    <!-- BEGIN: Theme JS-->
+    <script src="../app-assets/js/core/app-menu.js"></script>
+    <script src="../app-assets/js/core/app.js"></script>
+    <!-- END: Theme JS-->
+
+    <!-- BEGIN: Page JS-->
+    <!-- <script src="../app-assets/js/scripts/pages/app-user-list.js"></script> -->
+    <!-- END: Page JS-->
+
+    <script>
+      
+      $(document).ready(function(){
+ 
+        userListTable();
+
+        
+        $(window).on('load', function() {
+            if (feather) {
+                feather.replace({
+                    width: 14,
+                    height: 14
+                });
+            }
+        })
+
+        function userListTable(){
+
+          var userListTable = $("#userListTable").DataTable({
+
+            processing: true,
+            serverSide: true,
+            order:[],
+            ajax:{
+              url: '../apiler/user-list-table.php',
+              type: 'POST',
+            },
+            columnDefs:[
+                {
+                    targets: '_all',
+                    orderable: false,
+               
+                },
+                {
+                    targets: 6,
+                    className: 'text-center',
+                }
+            ]
+
+          })
+        }
+
+
+
+      
+    })
+
+      
+    </script>
+
+
+
+
+
+
+</body>
+<!-- END: Body-->
+
+</html>
